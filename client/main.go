@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/mpetavy/common"
-	"github.com/mpetavy/common/discover"
+	"github.com/mpetavy/discover"
 )
 
 func start() error {

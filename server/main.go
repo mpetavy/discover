@@ -2,17 +2,17 @@ package main
 
 import (
 	"github.com/mpetavy/common"
-	"github.com/mpetavy/common/discover"
+	"github.com/mpetavy/discover"
 )
 
 var (
-	discoverServer discover.Server
+	discoverServer *discover.Server
 )
 
 func start() error {
 	var err error
 
-	discoverServer, err = discover.NewServer("", 0, "", "")
+	discoverServer, err = discover.New("", 0, "", "")
 	if err != nil {
 		return err
 	}

@@ -37,17 +37,17 @@ func init() {
 	discoverInfo = flag.String("discover.info", "my-info", "discover info")
 }
 
-func NewServer(address string, readTimeout time.Duration, uid string, info string) (Server, error) {
+func New(address string, readTimeout time.Duration, uid string, info string) (*Server, error) {
 	address = common.Eval(len(address) != 0, address, *discoverAddress).(string)
 	readTimeout = common.Eval(readTimeout != 0, readTimeout, *discoverReadTimeout).(time.Duration)
 	uid = common.Eval(len(uid) != 0, uid, *discoverUID).(string)
 	info = common.Eval(len(info) != 0, info, *discoverInfo).(string)
 
 	if len(info) > maxMsgLength {
-		return Server{}, fmt.Errorf("max UDP info length exceeded. max length expected: %d received: %d", maxMsgLength, len(info))
+		return nil, fmt.Errorf("max UDP info length exceeded. max length expected: %d received: %d", maxMsgLength, len(info))
 	}
 
-	return Server{address: address, readTimeout: readTimeout, uid: uid, info: info}, nil
+	return &Server{address: address, readTimeout: readTimeout, uid: uid, info: info}, nil
 }
 
 func (server *Server) Start() error {
