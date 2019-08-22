@@ -21,6 +21,6 @@ func start() error {
 func main() {
 	defer common.Cleanup()
 
-	common.New(&common.App{common.Title(), "1.0.0", "2019", "discover demo client", "mpetavy", common.APACHE, "https://github.com/mpetavy/" + common.Title(), true, nil, start, nil, nil, 0}, nil)
+	common.New(&common.App{common.Title(), "1.0.0", "2019", "discover demo client", "mpetavy", common.APACHE, "https://github.com/mpetavy/" + common.Title(), true, start, nil, nil, 0}, nil)
 	common.Run()
 }
