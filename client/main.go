@@ -5,6 +5,10 @@ import (
 	"github.com/mpetavy/discover"
 )
 
+func init() {
+	common.Init(common.Title(), "1.0.0", "2019", "discover demo client", "mpetavy", common.APACHE, "https://github.com/mpetavy/"+common.Title(), true, start, nil, nil, 0)
+}
+
 func start() error {
 	discoveredIps, err := discover.Discover("")
 	if err != nil {
@@ -21,6 +25,5 @@ func start() error {
 func main() {
 	defer common.Cleanup()
 
-	common.New(&common.App{common.Title(), "1.0.0", "2019", "discover demo client", "mpetavy", common.APACHE, "https://github.com/mpetavy/" + common.Title(), true, start, nil, nil, 0}, nil)
-	common.Run()
+	common.Run(nil)
 }

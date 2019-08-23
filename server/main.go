@@ -9,6 +9,10 @@ var (
 	discoverServer *discover.Server
 )
 
+func init() {
+	common.Init(common.Title(), "1.0.0", "2019", "discover demo server", "mpetavy", common.APACHE, "https://github.com/mpetavy/"+common.Title(), true, start, stop, nil, 0)
+}
+
 func start() error {
 	var err error
 
@@ -27,6 +31,5 @@ func stop() error {
 func main() {
 	defer common.Cleanup()
 
-	common.New(&common.App{common.Title(), "1.0.0", "2019", "discover demo server", "mpetavy", common.APACHE, "https://github.com/mpetavy/" + common.Title(), true, start, stop, nil, 0}, nil)
-	common.Run()
+	common.Run(nil)
 }
