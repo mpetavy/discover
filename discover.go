@@ -1,7 +1,6 @@
 package discover
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -19,30 +18,11 @@ type Server struct {
 	quitCh      chan struct{}
 }
 
-var (
-	discoverAddress     *string
-	discoverReadTimeout *time.Duration
-	discoverUID         *string
-	discoverInfo        *string
-)
-
 const (
 	maxMsgLength = 1024
 )
 
-func init() {
-	discoverAddress = flag.String("discover.address", ":9999", "discover address")
-	discoverReadTimeout = flag.Duration("discover.readtimeout", time.Millisecond*1000, "discover read timeout")
-	discoverUID = flag.String("discover.uid", "my-uid", "discover uid")
-	discoverInfo = flag.String("discover.info", "my-info", "discover info")
-}
-
 func New(address string, readTimeout time.Duration, uid string, info string) (*Server, error) {
-	address = common.Eval(len(address) != 0, address, *discoverAddress).(string)
-	readTimeout = common.Eval(readTimeout != 0, readTimeout, *discoverReadTimeout).(time.Duration)
-	uid = common.Eval(len(uid) != 0, uid, *discoverUID).(string)
-	info = common.Eval(len(info) != 0, info, *discoverInfo).(string)
-
 	if len(info) > maxMsgLength {
 		return nil, fmt.Errorf("max UDP info length exceeded. max length expected: %d received: %d", maxMsgLength, len(info))
 	}
@@ -72,7 +52,7 @@ func (server *Server) Start() error {
 			case <-server.quitCh:
 				break
 			default:
-				c.SetReadDeadline(time.Now().Add(*discoverReadTimeout))
+				c.SetReadDeadline(time.Now().Add(server.readTimeout))
 
 				n, peer, err := c.ReadFrom(b)
 				if err != nil {
@@ -121,9 +101,7 @@ func (server *Server) Stop() error {
 	return nil
 }
 
-func Discover(uid string) (map[string]string, error) {
-	uid = common.Eval(len(uid) != 0, uid, *discoverUID).(string)
-
+func Discover(address string, readTimeout time.Duration, uid string) (map[string]string, error) {
 	common.DebugFunc("discover uid: %s", uid)
 
 	localIps, err := common.FindActiveIPs()
@@ -141,7 +119,7 @@ func Discover(uid string) (map[string]string, error) {
 	}
 	defer c.Close()
 
-	_, discoverPort, err := net.SplitHostPort(*discoverAddress)
+	_, discoverPort, err := net.SplitHostPort(address)
 	if err != nil {
 		return discoveredIps, err
 	}
@@ -189,7 +167,7 @@ func Discover(uid string) (map[string]string, error) {
 	common.Debug("reading answers ...")
 
 	b := make([]byte, maxMsgLength)
-	c.SetReadDeadline(time.Now().Add(*discoverReadTimeout))
+	c.SetReadDeadline(time.Now().Add(readTimeout))
 	for {
 		n, peer, err := c.ReadFrom(b)
 		if err != nil {
