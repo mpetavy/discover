@@ -11,23 +11,24 @@ import (
 )
 
 type Server struct {
-	address     string
-	readTimeout time.Duration
-	uid         string
-	info        string
-	quitCh      chan struct{}
+	address  string
+	timeout  time.Duration
+	uid      string
+	info     string
+	quitCh   chan struct{}
+	listener net.PacketConn
 }
 
 const (
-	maxMsgLength = 1024
+	maxInfoLength = 1024
 )
 
-func New(address string, readTimeout time.Duration, uid string, info string) (*Server, error) {
-	if len(info) > maxMsgLength {
-		return nil, fmt.Errorf("max UDP info length exceeded. max length expected: %d received: %d", maxMsgLength, len(info))
+func New(address string, timeout time.Duration, uid string, info string) (*Server, error) {
+	if len(info) > maxInfoLength {
+		return nil, fmt.Errorf("max UDP info length exceeded. max length expected: %d received: %d", maxInfoLength, len(info))
 	}
 
-	return &Server{address: address, readTimeout: readTimeout, uid: uid, info: info}, nil
+	return &Server{address: address, timeout: timeout, uid: uid, info: info}, nil
 }
 
 func (server *Server) Start() error {
@@ -37,9 +38,11 @@ func (server *Server) Start() error {
 		return fmt.Errorf("Server already started")
 	}
 
-	b := make([]byte, len(server.uid))
+	b := make([]byte, maxInfoLength)
 
-	c, err := net.ListenPacket("udp4", server.address)
+	var err error
+
+	server.listener, err = net.ListenPacket("udp4", server.address)
 	if err != nil {
 		return err
 	}
@@ -47,14 +50,14 @@ func (server *Server) Start() error {
 	server.quitCh = make(chan struct{})
 
 	go func() {
-		for {
+		for !common.AppStopped() {
 			select {
 			case <-server.quitCh:
 				break
 			default:
-				c.SetReadDeadline(time.Now().Add(server.readTimeout))
+				server.listener.SetReadDeadline(time.Now().Add(server.timeout))
 
-				n, peer, err := c.ReadFrom(b)
+				n, peer, err := server.listener.ReadFrom(b)
 				if err != nil {
 					if err, ok := err.(net.Error); ok && err.Timeout() {
 						break
@@ -77,7 +80,7 @@ func (server *Server) Start() error {
 
 				common.Debug("answer positive discover with info %s to %+v", server.info, peer)
 
-				if _, err := c.WriteTo([]byte(server.info), peer); err != nil {
+				if _, err := server.listener.WriteTo([]byte(server.info), peer); err != nil {
 					common.Error(err)
 				}
 			}
@@ -88,6 +91,8 @@ func (server *Server) Start() error {
 }
 
 func (server *Server) Stop() error {
+	server.listener.Close()
+
 	if server.quitCh == nil {
 		return fmt.Errorf("Server already stopped")
 	}
@@ -117,7 +122,9 @@ func Discover(address string, readTimeout time.Duration, uid string) (map[string
 	if err != nil {
 		return discoveredIps, err
 	}
-	defer c.Close()
+	defer func() {
+		common.IgnoreError(c.Close())
+	}()
 
 	_, discoverPort, err := net.SplitHostPort(address)
 	if err != nil {
@@ -125,31 +132,31 @@ func Discover(address string, readTimeout time.Duration, uid string) (map[string
 	}
 
 	for _, localIp := range localIps {
-		ipv4Addr, ipv4Net, err := net.ParseCIDR(localIp)
+		ip, ipNet, err := net.ParseCIDR(localIp)
 		if err != nil {
 			panic(err)
 		}
 
-		ipv4Addr = ipv4Addr.To4()
+		ip = ip.To4()
 
-		if ipv4Addr == nil {
+		if ip == nil {
 			continue
 		}
 
 		wg.Add(1)
 
-		go func(ipv4Addr net.IP, ipv4Net *net.IPNet) {
+		go func(ip net.IP, ipNet *net.IPNet) {
 			defer wg.Done()
 
-			ones, bits := ipv4Net.Mask.Size()
+			ones, bits := ipNet.Mask.Size()
 			mask := net.CIDRMask(ones, bits)
 
 			broadcast := net.IP(make([]byte, 4))
-			for i := range ipv4Addr {
-				broadcast[i] = ipv4Addr[i] | ^mask[i]
+			for i := range ip {
+				broadcast[i] = ip[i] | ^mask[i]
 			}
 
-			common.Debug("UDP broadcast: %v for ip: %v on port: %s", broadcast.String(), ipv4Net, discoverPort)
+			common.Debug("UDP broadcast: %v for ip: %v on port: %s", broadcast.String(), ipNet, discoverPort)
 
 			dst, err := net.ResolveUDPAddr("udp4", broadcast.String()+":"+discoverPort)
 			if err != nil {
@@ -159,14 +166,14 @@ func Discover(address string, readTimeout time.Duration, uid string) (map[string
 			if _, err := c.WriteTo([]byte(uid), dst); err != nil {
 				log.Fatal(err)
 			}
-		}(ipv4Addr, ipv4Net)
+		}(ip, ipNet)
 	}
 
 	wg.Wait()
 
 	common.Debug("reading answers ...")
 
-	b := make([]byte, maxMsgLength)
+	b := make([]byte, maxInfoLength)
 	c.SetReadDeadline(time.Now().Add(readTimeout))
 	for {
 		n, peer, err := c.ReadFrom(b)
