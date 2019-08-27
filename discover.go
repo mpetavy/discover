@@ -55,7 +55,12 @@ func (server *Server) Start() error {
 			case <-server.quitCh:
 				break
 			default:
-				server.listener.SetReadDeadline(time.Now().Add(server.timeout))
+				err := server.listener.SetDeadline(time.Now().Add(server.timeout))
+				if err != nil {
+					common.Error(err)
+
+					break
+				}
 
 				n, peer, err := server.listener.ReadFrom(b)
 				if err != nil {
@@ -91,7 +96,7 @@ func (server *Server) Start() error {
 }
 
 func (server *Server) Stop() error {
-	server.listener.Close()
+	common.DebugError(server.listener.Close())
 
 	if server.quitCh == nil {
 		return fmt.Errorf("Server already stopped")
@@ -106,7 +111,7 @@ func (server *Server) Stop() error {
 	return nil
 }
 
-func Discover(address string, readTimeout time.Duration, uid string) (map[string]string, error) {
+func Discover(address string, timeout time.Duration, uid string) (map[string]string, error) {
 	common.DebugFunc("discover uid: %s", uid)
 
 	localIps, err := common.FindActiveIPs()
@@ -174,8 +179,14 @@ func Discover(address string, readTimeout time.Duration, uid string) (map[string
 	common.Debug("reading answers ...")
 
 	b := make([]byte, maxInfoLength)
-	c.SetReadDeadline(time.Now().Add(readTimeout))
 	for {
+		err := c.SetDeadline(time.Now().Add(timeout))
+		if err != nil {
+			common.Error(err)
+
+			break
+		}
+
 		n, peer, err := c.ReadFrom(b)
 		if err != nil {
 			if err, ok := err.(net.Error); ok && err.Timeout() {
