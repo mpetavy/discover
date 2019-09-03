@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	discoverPort    *string
+	discoverAddress *string
 	discoverTimeout *time.Duration
 	discoverUID     *string
 )
@@ -17,13 +17,13 @@ var (
 func init() {
 	common.Init(common.Title(), "1.0.0", "2019", "discover demo client", "mpetavy", common.APACHE, "https://github.com/mpetavy/"+common.Title(), true, start, nil, nil, 0)
 
-	discoverPort = flag.String("port", ":9999", "discover address")
-	discoverTimeout = flag.Duration("timeout", time.Millisecond*1000, "discover read timeout")
+	discoverAddress = flag.String("c", ":9999", "discover address")
+	discoverTimeout = flag.Duration("t", time.Millisecond*1000, "discover read timeout")
 	discoverUID = flag.String("uid", "my-uid", "discover uid")
 }
 
 func start() error {
-	discoveredIps, err := discover.Discover(*discoverPort, *discoverTimeout, *discoverUID)
+	discoveredIps, err := discover.Discover(*discoverAddress, *discoverTimeout, *discoverUID)
 	if err != nil {
 		return err
 	}
