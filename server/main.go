@@ -2,13 +2,14 @@ package main
 
 import (
 	"flag"
+	"time"
+
 	"github.com/mpetavy/common"
 	"github.com/mpetavy/discover"
-	"time"
 )
 
 var (
-	discoverAddress *string
+	discoverPort    *string
 	discoverTimeout *time.Duration
 	discoverUID     *string
 	discoverInfo    *string
@@ -19,16 +20,16 @@ var (
 func init() {
 	common.Init(common.Title(), "1.0.0", "2019", "discover demo server", "mpetavy", common.APACHE, "https://github.com/mpetavy/"+common.Title(), true, start, stop, nil, 0)
 
-	discoverAddress = flag.String("discover.address", ":9999", "discover address")
-	discoverTimeout = flag.Duration("discover.timeout", time.Millisecond*1000, "discover timeout")
-	discoverUID = flag.String("discover.uid", "my-uid", "discover uid")
-	discoverInfo = flag.String("discover.info", "my-info", "discover info")
+	discoverPort = flag.String("port", ":9999", "discover address")
+	discoverTimeout = flag.Duration("timeout", time.Millisecond*1000, "discover timeout")
+	discoverUID = flag.String("uid", "my-uid", "discover uid")
+	discoverInfo = flag.String("info", "my-info", "discover info")
 }
 
 func start() error {
 	var err error
 
-	discoverServer, err = discover.New(*discoverAddress, *discoverTimeout, *discoverUID, *discoverInfo)
+	discoverServer, err = discover.New(*discoverPort, *discoverTimeout, *discoverUID, *discoverInfo)
 	if err != nil {
 		return err
 	}
