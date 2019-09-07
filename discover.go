@@ -55,7 +55,7 @@ func (server *Server) Start() error {
 			case <-server.quitCh:
 				break
 			default:
-				err := server.listener.SetDeadline(time.Now().Add(server.timeout))
+				err := server.listener.SetDeadline(common.DeadlineByDuration(server.timeout))
 				if err != nil {
 					common.Error(err)
 
@@ -180,7 +180,7 @@ func Discover(address string, timeout time.Duration, uid string) (map[string]str
 
 	b := make([]byte, maxInfoLength)
 	for {
-		err := c.SetDeadline(time.Now().Add(timeout))
+		err := c.SetDeadline(common.DeadlineByDuration(timeout))
 		if err != nil {
 			common.Error(err)
 
