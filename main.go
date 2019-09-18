@@ -15,7 +15,7 @@ var (
 )
 
 func init() {
-	common.Init(common.Title(), "1.0.0", "2019", "discover demo server", "mpetavy", common.APACHE, "https://github.com/mpetavy/"+common.Title(), true, start, stop, nil, 0)
+	common.Init(common.Title(), "1.0.0", "2019", "service discovery", "mpetavy", common.APACHE, "https://github.com/mpetavy/"+common.Title(), true, start, stop, nil, 0)
 
 	discoverAddress = flag.String("c", ":9999", "discover address")
 	discoverTimeout = flag.Int("t", 1000, "discover timeout")
