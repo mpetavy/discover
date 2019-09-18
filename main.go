@@ -20,7 +20,7 @@ func init() {
 	discoverAddress = flag.String("c", ":9999", "discover address")
 	discoverTimeout = flag.Int("t", 1000, "discover timeout")
 	discoverUID = flag.String("uid", "discover-uid", "discover uid")
-	discoverInfo = flag.String("info", "discover-info host:$host port:$port address:$address", "discover info")
+	discoverInfo = flag.String("info", "discover-info", "discover info")
 }
 
 func start() error {
