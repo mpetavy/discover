@@ -20,14 +20,14 @@ func init() {
 	discoverAddress = flag.String("c", ":9999", "discover address")
 	discoverTimeout = flag.Int("t", 1000, "discover timeout")
 	discoverUID = flag.String("uid", "discover-uid", "discover uid")
-	discoverInfo = flag.String("info", "discover-info", "discover info")
+	discoverInfo = flag.String("info", "discover-info host:$host port:$port address:$address", "discover info")
 }
 
 func start() error {
 	if common.IsRunningAsService() {
 		var err error
 
-		discoverServer, err = common.New(*discoverAddress, common.MsecToDuration(*discoverTimeout), *discoverUID, *discoverInfo)
+		discoverServer, err = common.NewDiscoverServer(*discoverAddress, common.MsecToDuration(*discoverTimeout), *discoverUID, *discoverInfo)
 		if err != nil {
 			return err
 		}
