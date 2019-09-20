@@ -11,7 +11,7 @@ var (
 	discoverUID     *string
 	discoverInfo    *string
 
-	discoverServer *common.Server
+	discoverServer *common.DiscoverServer
 )
 
 func init() {
