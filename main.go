@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/mpetavy/common"
 )
 
@@ -15,7 +16,7 @@ var (
 )
 
 func init() {
-	common.Init("1.0.0", "2019", "service discovery", "mpetavy", common.APACHE, true, start, stop, nil, 0)
+	common.Init("1.0.0", "2019", "service discovery", "mpetavy", fmt.Sprintf("https://github.com/mpetavy/%s", common.Title()), common.APACHE, true, start, stop, nil, 0)
 
 	discoverAddress = flag.String("c", ":9999", "discover address")
 	discoverTimeout = flag.Int("t", 1000, "discover timeout")
