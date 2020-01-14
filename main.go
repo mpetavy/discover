@@ -28,7 +28,7 @@ func start() error {
 	if common.IsRunningAsService() {
 		var err error
 
-		discoverServer, err = common.NewDiscoverServer(*discoverAddress, common.MsecToDuration(*discoverTimeout), *discoverUID, *discoverInfo)
+		discoverServer, err = common.NewDiscoverServer(*discoverAddress, common.MillisecondToDuration(*discoverTimeout), *discoverUID, *discoverInfo)
 		if err != nil {
 			return err
 		}
@@ -36,7 +36,7 @@ func start() error {
 		return discoverServer.Start()
 	}
 
-	discoveredIps, err := common.Discover(*discoverAddress, common.MsecToDuration(*discoverTimeout), *discoverUID)
+	discoveredIps, err := common.Discover(*discoverAddress, common.MillisecondToDuration(*discoverTimeout), *discoverUID)
 	if err != nil {
 		return err
 	}
