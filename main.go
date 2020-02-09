@@ -42,7 +42,7 @@ func start() error {
 	}
 
 	for k, v := range discoveredIps {
-		common.Info("discovered #%s: %s", k, v)
+		common.Info("discovered #%s info: %s", k, v)
 	}
 
 	return nil
