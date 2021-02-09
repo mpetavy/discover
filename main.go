@@ -7,36 +7,52 @@ import (
 )
 
 var (
-	discoverAddress *string
+	discoverClient  *string
+	discoverServer  *string
 	discoverTimeout *int
 	discoverUID     *string
 	discoverInfo    *string
 
-	discoverServer *common.DiscoverServer
+	server *common.DiscoverServer
 )
 
 func init() {
-	common.Init(true, "1.0.0", "", "2019", "service discovery", "mpetavy", fmt.Sprintf("https://github.com/mpetavy/%s", common.Title()), common.APACHE, start, stop, nil, 0)
+	common.Init(true, "1.0.0", "", "2019", "service discovery", "mpetavy", fmt.Sprintf("https://github.com/mpetavy/%s", common.Title()), common.APACHE, start, stop, run, 0)
 
-	discoverAddress = flag.String("c", ":9999", "discover address")
+	discoverClient = flag.String("c", "", "discover client")
+	discoverServer = flag.String("s", "", "discover server")
 	discoverTimeout = flag.Int("t", 1000, "discover timeout")
-	discoverUID = flag.String("uid", "discover-uid", "discover uid")
-	discoverInfo = flag.String("info", "discover-info", "discover info")
+	discoverUID = flag.String("uid", "", "discover uid")
+	discoverInfo = flag.String("info", "", "discover info")
+
+	common.Events.NewFuncReceiver(common.EventFlagsParsed{}, func(event common.Event) {
+		if *discoverClient != "" {
+			common.App().StartFunc = nil
+			common.App().StopFunc = nil
+		} else {
+			common.App().RunFunc = nil
+		}
+	})
 }
 
 func start() error {
-	if common.IsRunningAsService() {
-		var err error
+	var err error
 
-		discoverServer, err = common.NewDiscoverServer(*discoverAddress, common.MillisecondToDuration(*discoverTimeout), *discoverUID, *discoverInfo)
-		if err != nil {
-			return err
-		}
-
-		return discoverServer.Start()
+	server, err = common.NewDiscoverServer(*discoverServer, common.MillisecondToDuration(*discoverTimeout), *discoverUID, *discoverInfo)
+	if err != nil {
+		return err
 	}
 
-	discoveredIps, err := common.Discover(*discoverAddress, common.MillisecondToDuration(*discoverTimeout), *discoverUID)
+	err = server.Start()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func run() error {
+	discoveredIps, err := common.Discover(*discoverClient, common.MillisecondToDuration(*discoverTimeout), *discoverUID)
 	if err != nil {
 		return err
 	}
@@ -49,15 +65,11 @@ func start() error {
 }
 
 func stop() error {
-	if common.IsRunningAsService() {
-		return discoverServer.Stop()
-	}
-
-	return nil
+	return server.Stop()
 }
 
 func main() {
 	defer common.Done()
 
-	common.Run(nil)
+	common.Run([]string{"c|s"})
 }
