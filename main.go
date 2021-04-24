@@ -17,7 +17,7 @@ var (
 )
 
 func init() {
-	common.Init(true, "1.0.0", "", "2019", "service discovery", "mpetavy", fmt.Sprintf("https://github.com/mpetavy/%s", common.Title()), common.APACHE, nil, start, stop, run, 0)
+	common.Init(true, "1.0.0", "", "", "2019", "service discovery", "mpetavy", fmt.Sprintf("https://github.com/mpetavy/%s", common.Title()), common.APACHE, nil, start, stop, run, 0)
 
 	discoverClient = flag.String("c", "", "discover client")
 	discoverServer = flag.String("s", "", "discover server")
