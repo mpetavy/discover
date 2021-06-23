@@ -1,9 +1,0 @@
-FROM golang:1.13.7
-RUN mkdir /src
-COPY ./src /src
-WORKDIR /src
-RUN go get -u ./...
-RUN go build -o discover
-CMD ["-c",":15000","-info","HelloWorld","-service","simulate"]
-ENTRYPOINT ["discover"]
-
