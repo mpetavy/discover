@@ -187,14 +187,14 @@ The ending line 'lxc list debian-discover' prints out the IP address on which yo
 
 Parameter | Default value | Only CmdLine | Description
 ------------ | ------------- | ------------- | -------------
-? | false |  | show flags description and usage
-?md | false |  | show flags description and usage in markdown format
 app.language | en |  | language for messages
 app.product |  |  | app product
 c |  |  | discover client
 cfg.create | false | * | Reset configuration file and exit
 cfg.file | ./discover.json | * | Configuration file
 cfg.reset | false | * | Reset configuration file
+h | false | * | show flags description and usage
+hmd | false | * | show flags description and usage in markdown format
 info |  |  | discover info
 io.file.backups | 3 |  | amount of file backups
 io.network.timeout | 3000 |  | network server and client dial timeout
