@@ -1,11 +1,11 @@
-# DISCOVER documentation v1.0.1
+# DISCOVER documentation v1.0.2
 
 ## Document Version
 
 Version | Date | Author | Description
 ------------ | ------------ | ------------- | -------------
 1.0.0 | 23.06.2021 | mpetavy | Initial release
-1.0.1 | 23.06.2010 | mpetavy | some typos
+1.0.2 | 23.06.2010 | mpetavy | some typos
 
 ## Description
 

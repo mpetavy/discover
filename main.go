@@ -2,11 +2,18 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/mpetavy/common"
 )
 
 var (
+	LDFLAG_DEVELOPER = "mpetavy"                             // will be replaced with ldflag
+	LDFLAG_HOMEPAGE  = "https://github.com/mpetavy/discover" // will be replaced with ldflag
+	LDFLAG_LICENSE   = common.APACHE                         // will be replaced with ldflag
+	LDFLAG_VERSION   = "1.0.2"                               // will be replaced with ldflag
+	LDFLAG_EXPIRE    = ""                                    // will be replaced with ldflag
+	LDFLAG_GIT       = ""                                    // will be replaced with ldflag
+	LDFLAG_BUILD     = ""                                    // will be replaced with ldflag
+
 	discoverClient  *string
 	discoverServer  *string
 	discoverTimeout *int
@@ -17,7 +24,7 @@ var (
 )
 
 func init() {
-	common.Init(true, "1.0.1", "", "", "2019", "service discovery", "mpetavy", fmt.Sprintf("https://github.com/mpetavy/%s", common.Title()), common.APACHE, nil, start, stop, run, 0)
+	common.Init(true, LDFLAG_VERSION, LDFLAG_GIT, LDFLAG_BUILD, "2019", "service discovery", LDFLAG_DEVELOPER, LDFLAG_HOMEPAGE, LDFLAG_LICENSE, nil, start, stop, run, 0)
 
 	discoverClient = flag.String("c", "", "discover client")
 	discoverServer = flag.String("s", "", "discover server")
