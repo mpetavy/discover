@@ -1,11 +1,11 @@
-# DISCOVER documentation v1.0.2
+# DISCOVER documentation v1.0.3
 
 ## Document Version
 
 Version | Date | Author | Description
 ------------ | ------------ | ------------- | -------------
 1.0.0 | 23.06.2021 | mpetavy | Initial release
-1.0.2 | 23.06.2010 | mpetavy | some typos
+1.0.3 | 23.06.2010 | mpetavy | some typos
 
 ## Description
 
@@ -196,8 +196,9 @@ cfg.reset | false | * | Reset configuration file
 h | false | * | show flags description and usage
 hmd | false | * | show flags description and usage in markdown format
 info |  |  | discover info
+io.connect.timeout | 3000 |  | network server and client dial timeout
 io.file.backups | 3 |  | amount of file backups
-io.network.timeout | 3000 |  | network server and client dial timeout
+io.readwrite.timeout | 1800000 |  | network read/write timeout
 log.file |  |  | filename to log logFile (use "." for /home/ransom/go/src/discover/discover.log)
 log.filesize | 5242880 |  | max log file size
 log.io | false |  | trace logging
@@ -214,6 +215,7 @@ t | 1000 |  | discover timeout
 tls.certificate |  |  | Server TLS PKCS12 certificates & privkey container file or buffer
 tls.ciphers |  |  | TLS ciphers zo use
 tls.insecure | false |  | Use insecure TLS versions and cipher suites
+tls.keylen | 2048 |  | RSA key length
 tls.maxversion | TLS1.3 |  | TLS max version
 tls.minversion | TLS1.2 |  | TLS min version
 tls.mutual |  |  | Mutual TLS PKCS12 certificates & privkey container file or buffer
