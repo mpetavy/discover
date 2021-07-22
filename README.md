@@ -1,11 +1,12 @@
-# DISCOVER documentation v1.0.3
+# DISCOVER documentation v1.0.4
 
 ## Document Version
 
 Version | Date | Author | Description
 ------------ | ------------ | ------------- | -------------
 1.0.0 | 23.06.2021 | mpetavy | Initial release
-1.0.3 | 23.06.2010 | mpetavy | some typos
+1.0.3 | 23.06.2021 | mpetavy | some typos
+1.0.4 | 21.07.2021 | mpetavy | some typos
 
 ## Description
 
@@ -28,9 +29,10 @@ Please keep in mind that such broadcasts are not transfered outside the current 
 
 A service discovery is setup and find by an UID and a broadcast network port.
 
-The DISOVER server "-s" waits for incoming network broadcasts via the UDP protocol. Only if the same UDP port for broadcast sending and receiving of DISOVER
-server "-s" and client "-c" is used and the same UID "-uid" is defined on both endpoints a successfull service discovery happens. The DISCOVER server then
-reports back to the DISCOVER client its "-info" information.
+The DISOVER server "-s" waits for incoming network broadcasts via the UDP protocol. Only if the same UDP port for
+broadcast sending and receiving of DISOVER server "-s" and client "-c" is used and the same UID "-uid" is defined on
+both endpoints a successfull service discovery happens. The DISCOVER server then reports back to the DISCOVER client
+its "-info" information.
 
 Sample:
 
@@ -43,8 +45,8 @@ DISCOVER is developed with the Google GO tooling.
 
 Current used version 1.16.6
 
-By using the GO programming language (https://golang.org) multiple architectures and OS are supported. You can find a complete list of all supported
-architectures and OS at https://github.com/golang/go/blob/master/src/go/build/syslist.go
+By using the GO programming language (https://golang.org) multiple architectures and OS are supported. You can find a
+complete list of all supported architectures and OS at https://github.com/golang/go/blob/master/src/go/build/syslist.go
 
 Currently these environments are tested in development
 
@@ -57,25 +59,33 @@ Currently these environments are tested in development
 
 Before DISCOVER can be compiled please make sure the following tasks in this order.
 
-1. i18n and opensource license files. To generate those files please execute inside the DISCOVER source code folder the following command "go run . -codegen".
-    1. This generates an updated "static/DISCOVER.i18n" file with all i18n strings inside the DISCOVER source code files.
-    1. This generates an updated "static/discover-opensource.json" file with an listing if all used opensource modules along with their license infos.
-1. BINPACK resources. All resources of DISCOVER must be transpiled to "binpack" source code files in order to be compiled statically to the DISCOVER executable.
-   For that please use the BINPACK executable (https://github.com/mpetavy/binpack). Execute the transpile with the command "binoack -i static" inside the
-   DISCOVER source code folder. After successfull execution an updated GO soource code file "binpack.go" is generated.
-1. "vendor.tar.gz" file. When DISCOVER is compiled with Docker the compilation process uses GO's feature of "vendor"ing, That means the GO compiler in the
-   Docker build does not use the standard GOPATH directory for 3d party modules source code files but uses the "vendor" directory in the DISCOVER source code
-   folder. The "vendor" is generated automatically in the Docker build by untaring the TAR file "vendor.tag.gz". To update the "vendor.tar.gz" file to match the
-   latest GO modules in the GOPATH of the development environment the batch job "update-vendor.bat" can be used.
+1. i18n and opensource license files. To generate those files please execute inside the DISCOVER source code folder the
+   following command "go run . -codegen".
+    1. This generates an updated "static/DISCOVER.i18n" file with all i18n strings inside the DISCOVER source code
+       files.
+    1. This generates an updated "static/discover-opensource.json" file with an listing if all used opensource modules
+       along with their license infos.
+1. BINPACK resources. All resources of DISCOVER must be transpiled to "binpack" source code files in order to be
+   compiled statically to the DISCOVER executable. For that please use the BINPACK
+   executable (https://github.com/mpetavy/binpack). Execute the transpile with the command "binoack -i static" inside
+   the DISCOVER source code folder. After successfull execution an updated GO soource code file "binpack.go" is
+   generated.
+1. "vendor.tar.gz" file. When DISCOVER is compiled with Docker the compilation process uses GO's feature of "vendor"ing,
+   That means the GO compiler in the Docker build does not use the standard GOPATH directory for 3d party modules source
+   code files but uses the "vendor" directory in the DISCOVER source code folder. The "vendor" is generated
+   automatically in the Docker build by untaring the TAR file "vendor.tag.gz". To update the "vendor.tar.gz" file to
+   match the latest GO modules in the GOPATH of the development environment the batch job "update-vendor.bat" can be
+   used.
 
 ## Build with Docker
 
-DISCOVER can be built either by the BUILD.SH (Linux) or BUILD.BAT (Windows) batch jobs. The Build uses Docker to generate an Image in which the complete
-packages for Windows and Linux are generated.
+DISCOVER can be built either by the BUILD.SH (Linux) or BUILD.BAT (Windows) batch jobs. The Build uses Docker to
+generate an Image in which the complete packages for Windows and Linux are generated.
 
 This is done by using GO's built-in feature to do cross-compiling to any supported plattform inside the Docker images.
 
-After the docker image creatiion a temporaty docker container is built from which the following 3 software packages are extracted:
+After the docker image creatiion a temporaty docker container is built from which the following 3 software packages are
+extracted:
 
 Sample for Version "1.0.0" and Build number "1234":
 
@@ -101,16 +111,18 @@ To build a binary executable for your preferred OS please do the following:
 1. Clone the DISCOVER repository
 1. CD into the "DISCOVER" directory
 1. Build:
-    1. If you would like to cross compile to an other OS/architecture define the env variable GOOS and GOARCH along to the values defined
-       here https://github.com/golang/go/blob/master/src/go/build/syslist.go
+    1. If you would like to cross compile to an other OS/architecture define the env variable GOOS and GOARCH along to
+       the values defined here https://github.com/golang/go/blob/master/src/go/build/syslist.go
     1. Build DISCOVER by "go install". Multiple dependent modules will be downloaded during the build
     1. After a successful build you will find the DISCOVER executable in the "GOPATH\bin" directory
 
 ## Installation as application
 
-Like all other GO based application there is only the file `DISCOVER.exe` or `DISCOVER` which contains the complete application.
+Like all other GO based application there is only the file `DISCOVER.exe` or `DISCOVER` which contains the complete
+application.
 
-Just copy this executable into any installation directory you would like. Start the application by calling the executable `DISCOVER.exe` or `./DISCOVER`
+Just copy this executable into any installation directory you would like. Start the application by calling the
+executable `DISCOVER.exe` or `./DISCOVER`
 
 ## Installation as OS service
 
@@ -149,8 +161,8 @@ docker-compose-up.bat" and "docker-compose-down.bat". Here a sample Dockerfile:
 
 ## Running DISCOVER with Linux Container (LXC)
 
-The Linux amd64 package containes everything for running DISCOVER with Linux container (LXC). Here a sample script to setup and install DISCOVER inside a Linux
-container based on Debian. Finally the LXC is exported to a tar.gz file.
+The Linux amd64 package containes everything for running DISCOVER with Linux container (LXC). Here a sample script to
+setup and install DISCOVER inside a Linux container based on Debian. Finally the LXC is exported to a tar.gz file.
 
 * Used LXC version is 4.0.0 (compatible 2.x+)
 * LXC container name is 'DISCOVER'

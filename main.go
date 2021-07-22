@@ -9,7 +9,7 @@ var (
 	LDFLAG_DEVELOPER = "mpetavy"                             // will be replaced with ldflag
 	LDFLAG_HOMEPAGE  = "https://github.com/mpetavy/discover" // will be replaced with ldflag
 	LDFLAG_LICENSE   = common.APACHE                         // will be replaced with ldflag
-	LDFLAG_VERSION   = "1.0.3"                               // will be replaced with ldflag
+	LDFLAG_VERSION   = "1.0.4"                               // will be replaced with ldflag
 	LDFLAG_EXPIRE    = ""                                    // will be replaced with ldflag
 	LDFLAG_GIT       = ""                                    // will be replaced with ldflag
 	LDFLAG_BUILD     = ""                                    // will be replaced with ldflag
@@ -22,6 +22,14 @@ var (
 
 	server *common.DiscoverServer
 )
+
+// Server
+// Without host: go run . -s :5000 -uid test -log.verbose
+// With host (use broadcast ip): go run . -s 192.168.1.255:5000 -uid test -log.verbose
+//
+// Client
+// Without host: go run . -c :5000 -uid test -log.verbose
+// With host (use ip): go run . -s 192.168.1.3:5000 -uid test -log.verbose
 
 func init() {
 	common.Init(true, LDFLAG_VERSION, LDFLAG_GIT, LDFLAG_BUILD, "2019", "service discovery", LDFLAG_DEVELOPER, LDFLAG_HOMEPAGE, LDFLAG_LICENSE, nil, start, stop, run, 0)
@@ -78,5 +86,5 @@ func stop() error {
 func main() {
 	defer common.Done()
 
-	common.Run([]string{"c|s"})
+	common.Run([]string{"c|s", "uid"})
 }
