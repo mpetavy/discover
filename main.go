@@ -63,6 +63,8 @@ func start() error {
 		return err
 	}
 
+	common.Info("Listen on %v...", *discoverServer)
+
 	return nil
 }
 
