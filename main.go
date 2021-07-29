@@ -46,6 +46,9 @@ func init() {
 			common.App().StopFunc = nil
 		} else {
 			common.App().RunFunc = nil
+			if !common.IsRunningAsService() {
+				common.Panic(flag.Set(common.FlagNameService, common.SERVICE_SIMULATE))
+			}
 		}
 	})
 }
@@ -69,13 +72,13 @@ func start() error {
 }
 
 func run() error {
-	discoveredIps, err := common.Discover(*discoverClient, common.MillisecondToDuration(*discoverTimeout), *discoverUID)
+	list, err := common.Discover(*discoverClient, common.MillisecondToDuration(*discoverTimeout), *discoverUID)
 	if err != nil {
 		return err
 	}
 
-	for k, v := range discoveredIps {
-		common.Info("discovered #%s info: %s", k, v)
+	for i, v := range list {
+		common.Info("discovered #%d: %s", i, v)
 	}
 
 	return nil
