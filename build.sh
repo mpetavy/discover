@@ -55,24 +55,28 @@ docker cp $APP:/go/src/$APP/$APP-$LDFLAG_VERSION-$LDFLAG_BUILD-linux-amd64.tar.g
 docker cp $APP:/go/src/$APP/$APP-$LDFLAG_VERSION-$LDFLAG_BUILD-linux-arm6.tar.gz .
 
 if [ -z "$TEAMCITY_VERSION" ]; then
-  if [ ! -z "$(docker images -q $APP-app)" ]; then
-    docker image rm -f $APP-app
+  if [ ! -z "$(docker images -q mpetavy/$APP-app)" ]; then
+    docker image rm -f mpetavy/$APP-app
   fi
 
-  if [ ! -z "$(docker ps -a | grep -i $APP-app)" ]; then
-    docker container rm -f $APP-app
+  if [ ! -z "$(docker ps -a | grep -i mpetavy/$APP-app)" ]; then
+    docker container rm -f mpetavy/$APP-app
   fi
 
-  docker cp $APP:/go/src/$APP/dist-linux-amd64/discover .
+  [ -f "/tmp/context" ] && rm /tmp/context
+  [ -d "/tmp/context" ] && rm -rf /tmp/context
 
-  docker image build --force-rm -t $APP-app -f ./Dockerfile-run .
+  mkdir /tmp/context
 
-  rm ./discover
+  docker cp $APP:/go/src/$APP/dist-linux-amd64/discover /tmp/context
 
-  # docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-  # docker tag discover-app mpetavy/discover-app
-  # docker commit -m "discover-app" -a mpetavy `docker container ls -lq` mpetavy/discover-app
-  # docker push mpetavy/discover-app
+  docker image build --force-rm -t mpetavy/$APP-app -f ./Dockerfile-run /tmp/context
+
+  rm -rf /tmp/context
+
+  if [ ! -z "$DOCKER_USERNAME" ]; then
+    docker push mpetavy/$APP-app
+  fi
 fi
 
 if [ ! -z "$TEAMCITY_VERSION" ]; then
