@@ -37,7 +37,7 @@ func init() {
 	discoverClient = flag.String("c", "", "discover client")
 	discoverServer = flag.String("s", "", "discover server")
 	discoverTimeout = flag.Int("t", 1000, "discover timeout")
-	discoverUID = flag.String("uid", "discover", "discover uid")
+	discoverUID = flag.String("uid", "", "discover uid")
 	discoverInfo = flag.String("info", "<host>", "discover info")
 
 	common.Events.NewFuncReceiver(common.EventFlagsParsed{}, func(event common.Event) {
