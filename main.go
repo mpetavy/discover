@@ -32,7 +32,7 @@ var (
 // With host (use ip): go run . -s 192.168.1.3:5000 -uid test -log.verbose
 
 func init() {
-	common.Init(LDFLAG_VERSION, LDFLAG_GIT, LDFLAG_BUILD, "2019", "service discovery", LDFLAG_DEVELOPER, LDFLAG_HOMEPAGE, LDFLAG_LICENSE, nil, start, stop, run, 0)
+	common.Init("discover", LDFLAG_VERSION, LDFLAG_GIT, LDFLAG_BUILD, "2019", "service discovery", LDFLAG_DEVELOPER, LDFLAG_HOMEPAGE, LDFLAG_LICENSE, nil, start, stop, run, 0)
 
 	discoverClient = flag.String("c", "", "discover client")
 	discoverServer = flag.String("s", "", "discover server")
