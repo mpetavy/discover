@@ -35,7 +35,7 @@ Sample:
 
 DISCOVER is developed with the Google GO tooling.
 
-Current used version 1.19.2
+Current used version 1.20.1
 
 By using the GO programming language (https://golang.org) multiple architectures and OS are supported. You can find a
 complete list of all supported architectures and OS at https://github.com/golang/go/blob/master/src/go/build/syslist.go
