@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"github.com/mpetavy/common"
 )
@@ -31,8 +32,11 @@ var (
 // Without host: go run . -c :5000 -uid test -log.verbose
 // With host (use ip): go run . -s 192.168.1.3:5000 -uid test -log.verbose
 
+//go:embed go.mod
+var resources embed.FS
+
 func init() {
-	common.Init("discover", LDFLAG_VERSION, LDFLAG_GIT, LDFLAG_BUILD, "2019", "service discovery", LDFLAG_DEVELOPER, LDFLAG_HOMEPAGE, LDFLAG_LICENSE, nil, start, stop, run, 0)
+	common.Init("", LDFLAG_VERSION, LDFLAG_GIT, LDFLAG_BUILD, "service discovery", LDFLAG_DEVELOPER, LDFLAG_HOMEPAGE, LDFLAG_LICENSE, &resources, start, stop, run, 0)
 
 	discoverClient = flag.String("c", "", "discover client")
 	discoverServer = flag.String("s", "", "discover server")
