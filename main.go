@@ -44,7 +44,7 @@ func init() {
 	discoverUID = flag.String("uid", "", "discover uid")
 	discoverInfo = flag.String("info", "<host>", "discover info")
 
-	common.Events.AddListener(common.EventFlagsParsed{}, func(event common.Event) {
+	common.Events.AddListener(common.EventFlags{}, func(event common.Event) {
 		if *discoverClient != "" {
 			common.App().StartFunc = nil
 			common.App().StopFunc = nil
